@@ -76,12 +76,6 @@ public final class ConfigUtil {
         byte[] bytes = Base64Decoder.decode(line);
         return Strings.fromUTF8ByteArray(bytes);
     }
-
-    public static void main(String[] args){
-        ConfigUtil util = new ConfigUtil(new Configuracao());
-        System.out.println(util.encodeBase64("wegser123("));
-        System.out.println(util.decodeBase64(util.encodeBase64("wegser123(")));
-    }
     
     private String encodeBase64(String line) {
         char[] chars = Base64Encoder.encode(line.getBytes());
