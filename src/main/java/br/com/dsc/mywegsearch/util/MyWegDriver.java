@@ -7,11 +7,9 @@ package br.com.dsc.mywegsearch.util;
 
 import br.com.dsc.mywegsearch.entities.Configuracao;
 import com.gargoylesoftware.htmlunit.BrowserVersion;
-import com.gargoylesoftware.htmlunit.Page;
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.WebRequest;
 import com.gargoylesoftware.htmlunit.WebResponse;
-import com.gargoylesoftware.htmlunit.WebResponseData;
 import com.gargoylesoftware.htmlunit.WebWindow;
 import com.gargoylesoftware.htmlunit.html.DomElement;
 import com.gargoylesoftware.htmlunit.html.HtmlAnchor;
@@ -21,6 +19,7 @@ import com.gargoylesoftware.htmlunit.html.HtmlSpan;
 import com.gargoylesoftware.htmlunit.html.HtmlTableBody;
 import com.gargoylesoftware.htmlunit.html.HtmlTableRow;
 import java.io.File;
+import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.net.URL;
 import java.util.Iterator;
@@ -34,7 +33,6 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.htmlunit.HtmlUnitDriver;
 import org.openqa.selenium.htmlunit.HtmlUnitWebElement;
-import org.w3c.dom.Document;
 
 /**
  *
@@ -226,17 +224,12 @@ public class MyWegDriver {
             Field f = wbe.getClass().getDeclaredField("element");
             f.setAccessible(true);
             HtmlAnchor anchor = (HtmlAnchor) f.get(wbe);
-            WebClient wc = new WebClient(BrowserVersion.CHROME);
-            Page p = wc.getPage("https://www.myweg.net/webdynpro/resources/weg.net/astec~nse/App/~wd_cache_/~wd_key_pWHNpHqVzZerlLsM/report.pdf?sap-wd-download=1&sap-wd-cltwndid=WID1551997766273&sap-wd-secure-id=71m1WZ2UVj4df9af9vvl_A%3D%3D&sap-ext-sid=cz*2*jvwkWOuzQg2pZEH7w--6t0RsNWmwfvVwC1oVWuuVg--%2Fpcd%3Aportal_content%2Fnet.weg.folder.weg%2Fnet.weg.folder.core%2Fnet.weg.folder.roles%2Fnet.weg.role.technical_assistant_motors%2Fnet.weg.workset.technical_assistant_motors%2Fwireframe_system%2Fweg.net%2Fastec%7Ense%2FApp%2Fbase%2F&sap-wd-norefresh=X&sap-ep-version=7.50.201611260251");
-            WebResponse response = p.getWebResponse();
-            //WebResponse response = anchor.getHtmlPageOrNull().getWebResponse();
-            Field fd = response.getClass().getDeclaredField("responseData_");
-            fd.setAccessible(true);
-            WebResponseData wrd = (WebResponseData) fd.get(response);
-            PDDocument document = new PDDocument();
-            document.load(wrd.getBody());
-            document.save(new File("C:\\Users\\Tiago\\" + fileName + ".pdf"));
-            //System.out.println(page.asText());
+            WebResponse wr = anchor.click().getWebResponse();
+            InputStream input = wr.getContentAsStream();
+            PDDocument document = PDDocument.load(input);
+            document.save(new File("C:\\Users\\tiago.teixeira\\Documents\\" + fileName + ".pdf"));
+            //document.save(new File("C:\\Users\\Tiago\\" + fileName + ".pdf"));
+            document.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
