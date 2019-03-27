@@ -6,9 +6,10 @@
 package br.com.dsc.mywegsearch.listener;
 
 import br.com.dsc.mywegsearch.entities.Configuracao;
+import br.com.dsc.mywegsearch.entities.Motor;
 import br.com.dsc.mywegsearch.frames.Form_Main;
+import br.com.dsc.mywegsearch.service.Service_MyWeg;
 import br.com.dsc.mywegsearch.util.ConfigUtil;
-import br.com.dsc.mywegsearch.util.MyWegDriver;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -20,10 +21,14 @@ public class Listener_Main implements ActionListener {
 
     private final Form_Main form;
     private final Configuracao config;
+    private final Service_MyWeg service;
+    private final Motor motor;
 
     public Listener_Main(Form_Main form) {
         this.form = form;
+        this.service = new Service_MyWeg(form);
         this.config = new Configuracao();
+        this.motor = new Motor();
         initComponents();
     }
 
@@ -67,8 +72,8 @@ public class Listener_Main implements ActionListener {
     }
 
     private void pesquisar() {
-        MyWegDriver mwd = new MyWegDriver();
-        mwd.getLoginPageMyWeg(config);
+        service.pesquisa(motor);
+        System.out.println(motor.toString());
     }
 
 }
